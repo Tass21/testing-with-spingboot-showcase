@@ -1,0 +1,39 @@
+services:
+  postgres:
+    container_name: postgres
+    image: postgres
+    environment:
+      POSTGRES_USER: tdksoft
+      POSTGRES_PASSWORD: test
+      PGDATA: /data/postgres
+    volumes:
+      - postgresvl:/data/postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - postgresntw
+    restart: unless-stopped
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+      - pgadminvl:/var/lib/pgadmin
+    ports:
+      - "5050:80"
+    networks:
+      - postgresntw
+    restart: unless-stopped
+
+
+networks:
+  postgresntw:
+    driver: bridge
+
+volumes:
+  postgresvl:
+  pgadminvl:
